@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UP QIB | Premium Financial Information Consultancy</title>
+    <style>
+        /* Global Color Variables As Required */
+        :root {
+            --primary: #E8B4B8;
+            --secondary: #A8DADC;
+            --accent: #C8B6D9;
+            --bg: #F9D5C7;
+            --text: #FFFAFC;
+            --nav-dark: #524247;
+            --dark-text: #33282C;
+            --shadow: 0 4px 20px rgba(82, 66, 71, 0.15);
+            --transition: all 0.3s ease;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--dark-text);
+            overflow-x: hidden;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        ul {
+            list-style: none;
+        }
+        button, input, textarea {
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Navigation Bar */
+        header {
+            background-color: var(--nav-dark);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+            box-shadow: var(--shadow);
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+        .logo {
+            color: var(--text);
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .logo span {
+            color: var(--primary);
+        }
+        .desktop-nav ul {
+            display: flex;
+            gap: 2.5rem;
+        }
+        .desktop-nav a {
+            color: var(--text);
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 8px 0;
+            position: relative;
+            transition: var(--transition);
+        }
+        .desktop-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+        .desktop-nav a:hover::after,
+        .desktop-nav a.active::after {
+            width: 100%;
+        }
+        .mobile-menu-btn {
+            display: none;
+            color: var(--text);
+            font-size: 1.8rem;
+            background: transparent;
+        }
+        .mobile-nav {
+            position: fixed;
+            top: 70px;
+            left: -100%;
+            width: 100%;
+            height: calc(100vh - 70px);
+            background: var(--nav-dark);
+            padding: 3rem 2rem;
+            transition: left 0.4s ease;
+            z-index: 998;
+        }
+        .mobile-nav.open {
+            left: 0;
+        }
+        .mobile-nav ul {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .mobile-nav a {
+            color: var(--text);
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+
+        /* Side Floating Ads (Movable & Closeable) */
+        .ad-sidebar {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 160px;
+            background: linear-gradient(145deg, var(--accent), var(--primary));
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            z-index: 900;
+            cursor: grab;
+            transition: var(--transition);
+        }
+        .ad-sidebar.left {
+            left: 10px;
+        }
+        .ad-sidebar.right {
+            right: 10px;
+        }
+        .ad-close {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--nav-dark);
+            color: var(--text);
+            font-size: 14px;
+            display: grid;
+            place-items: center;
+        }
+        .ad-content h4 {
+            color: var(--dark-text);
+            margin: 8px 0;
+            font-size: 0.9rem;
+        }
+        .ad-content p {
+            font-size: 0.75rem;
+            line-height: 1.4;
+            color: var(--dark-text);
+        }
+        .ad-img {
+            width: 100%;
+            border-radius: 6px;
+            margin: 8px 0;
+        }
+        .ad-hidden {
+            display: none !important;
+        }
+
+        /* Main Page Wrapper (All Sections Hidden By Default) */
+        main {
+            margin-top: 70px;
+            max-width: 1400px;
+            margin-inline: auto;
+            padding: 2rem;
+        }
+        .page-section {
+            display: none;
+            min-height: calc(100vh - 70px);
+            padding: 2rem 0;
+        }
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Banner - Homepage */
+        .hero-banner {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+        .hero-banner img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+        }
+        .hero-text-wrap {
+            background: linear-gradient(90deg, rgba(82,66,71,0.8), rgba(232,180,184,0.4));
+            padding: 4rem 3rem;
+            margin-top: -120px;
+            position: relative;
+            z-index: 2;
+            border-radius: 0 0 16px 16px;
+        }
+        .hero-text-wrap h1 {
+            font-size: 3rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+        .hero-text-wrap p {
+            font-size: 1.2rem;
+            color: var(--text);
+            max-width: 700px;
+            line-height: 1.6;
+        }
+        .hero-btn-group {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1.5rem;
+        }
+        .btn-primary {
+            padding: 14px 32px;
+            background: var(--primary);
+            color: var(--dark-text);
+            font-weight: 600;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        .btn-primary:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+        .btn-secondary {
+            padding: 14px 32px;
+            background: transparent;
+            border: 2px solid var(--text);
+            color: var(--text);
+            font-weight: 600;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        .btn-secondary:hover {
+            background: var(--text);
+            color: var(--nav-dark);
+        }
+
+        /* Service Card Grid */
+        .grid-wrap {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+        .service-card {
+            background: var(--text);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        .service-card:hover {
+            transform: translateY(-8px);
+        }
+        .card-img {
+            height: 220px;
+            width: 100%;
+            object-fit: cover;
+        }
+        .card-body {
+            padding: 1.8rem;
+        }
+        .card-body h3 {
+            color: var(--nav-dark);
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent);
+            padding-left: 12px;
+        }
+        .card-body p {
+            line-height: 1.7;
+            color: #44383c;
+        }
+
+        /* Section Common Title */
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .section-title h2 {
+            font-size: 2.4rem;
+            color: var(--nav-dark);
+            position: relative;
+            display: inline-block;
+        }
+        .section-title h2::after {
+            content: '';
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        .section-title p {
+            margin-top: 1.2rem;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-inline: auto;
+            color: #55464b;
+        }
+
+        /* About Us Page Style */
+        .about-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin: 3rem 0;
+        }
+        .about-img-block img {
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+        .about-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--nav-dark);
+        }
+        .about-text p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+        .value-list li {
+            margin: 12px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+        .value-list li::before {
+            content: '✓';
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Contact Page & Form */
+        .contact-wrap {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 2rem;
+        }
+        .contact-info-block {
+            background: linear-gradient(145deg, var(--secondary), var(--accent));
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+        .contact-info-block h3 {
+            font-size: 1.6rem;
+            margin-bottom: 2rem;
+            color: var(--nav-dark);
+        }
+        .contact-item {
+            margin: 1.8rem 0;
+        }
+        .contact-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            color: var(--nav-dark);
+        }
+        .contact-item p {
+            font-size: 1.05rem;
+        }
+        .contact-form-block {
+            background: var(--text);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--nav-dark);
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(200, 182, 217, 0.3);
+        }
+        .submit-msg {
+            margin-top: 1rem;
+            padding: 12px;
+            border-radius: 8px;
+            background: #d4edda;
+            color: #155724;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
+        .submit-msg.show {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--nav-dark);
+            padding: 3rem 2rem;
+            margin-top: 5rem;
+        }
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            color: var(--text);
+            text-align: center;
+        }
+        .footer-container h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .footer-container p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Mobile Responsive Adjustments */
+        @media(max-width:992px) {
+            .desktop-nav {
+                display: none;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .about-row, .contact-wrap {
+                grid-template-columns: 1fr;
+            }
+            .hero-banner img {
+                height: 350px;
+            }
+            .hero-text-wrap h1 {
+                font-size: 2rem;
+            }
+            .ad-sidebar {
+                width: 120px;
+            }
+        }
+        @media(max-width:576px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+            main {
+                padding: 1rem;
+            }
+            .hero-text-wrap {
+                padding: 2rem 1.5rem;
+            }
+            .hero-btn-group {
+                flex-direction: column;
+            }
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            .ad-sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header>
+        <div class="nav-container">
+            <a href="#home" class="logo page-nav-link">UP <span>QIB</span></a>
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="#home" class="page-nav-link active">Home</a></li>
+                    <li><a href="#services" class="page-nav-link">Our Services</a></li>
+                    <li><a href="#about" class="page-nav-link">About Us</a></li>
+                    <li><a href="#contact" class="page-nav-link">Contact Us</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        </div>
+        <!-- Mobile Nav Menu -->
+        <nav class="mobile-nav" id="mobileNav">
+            <ul>
+                <li><a href="#home" class="page-nav-link mobile-link">Home</a></li>
+                <li><a href="#services" class="page-nav-link mobile-link">Our Services</a></li>
+                <li><a href="#about" class="page-nav-link mobile-link">About Us</a></li>
+                <li><a href="#contact" class="page-nav-link mobile-link">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Movable & Closeable Left Ad Bar -->
+    <div class="ad-sidebar left" id="adLeft">
+        <button class="ad-close" onclick="closeAd('adLeft')">×</button>
+        <div class="ad-content">
+            <img class="ad-img" src="https://cowierhametd475-blip.github.io/325-3/45.jpg" alt="Financial Consult Promo">
+            <h4>Premium Financial Analysis</h4>
+            <p>Custom market data reports for global investors</p>
+        </div>
+    </div>
+    <!-- Movable & Closeable Right Ad Bar -->
+    <div class="ad-sidebar right" id="adRight">
+        <button class="ad-close" onclick="closeAd('adRight')">×</button>
+        <div class="ad-content">
+            <img class="ad-img" src="https://cowierhametd475-blip.github.io/325-3/46.jpg" alt="Consultancy Package">
+            <h4>One-on-One Consulting</h4>
+            <p>Professional advisors available 24/7 online</p>
+        </div>
+    </div>
+
+    <main>
+        <!-- Home Page Section -->
+        <section id="home" class="page-section active">
+            <div class="hero-banner">
+                <img src="https://cowierhametd475-blip.github.io/325-3/47.jpg" alt="UP QIB Financial Consultancy Banner">
+                <div class="hero-text-wrap">
+                    <h1>UP QIB Global Financial Consultancy</h1>
+                    <p>Deliver accurate, real-time financial intelligence, market research and bespoke investment consulting services for institutions, enterprises and individual investors worldwide, headquartered in Manchester UK.</p>
+                    <div class="hero-btn-group">
+                        <a href="#services" class="btn-primary page-nav-link">Explore Our Services</a>
+                        <a href="#contact" class="btn-secondary page-nav-link">Get In Touch</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <h2>Why Choose UP QIB</h2>
+                <p>We integrate global financial data resources, professional analyst teams and standardized consulting processes to deliver reliable financial information solutions</p>
+            </div>
+
+            <div class="grid-wrap">
+                <div class="service-card">
+                    <img class="card-img" src="https://cowierhametd475-blip.github.io/325-3/48.jpg" alt="Market Data Research">
+                    <div class="card-body">
+                        <h3>Global Market Data Analysis</h3>
+                        <p>Collect, sort and interpret cross-border stock, forex, commodity and bond market data, output intuitive data reports and trend forecasts.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img class="card-img" src="https://cowierhametd475-blip.github.io/325-3/49.jpg" alt="Investment Consulting">
+                    <div class="card-body">
+                        <h3>Custom Investment Consulting</h3>
+                        <p>Personalized asset allocation plans, risk assessment and long-term investment strategy consultation for retail and institutional clients.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img class="card-img" src="https://cowierhametd475-blip.github.io/325-3/50.jpg" alt="Financial Risk Audit">
+                    <div class="card-body">
+                        <h3>Financial Risk Evaluation</h3>
+                        <p>Comprehensive risk auditing for corporate finance, identify hidden market risks and provide targeted risk avoidance suggestions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Services Sub Page -->
+        <section id="services" class="page-section">
+            <div class="section-title">
+                <h2>Full Range Financial Information Services</h2>
+                <p>Comprehensive one-stop financial consulting system covering market research, asset consulting, corporate financial planning and industry analysis</p>
+            </div>
+            <div class="grid-wrap">
+                <div class="service-card">
+                    <img class="card-img" src="https://cowierhametd475-blip.github.io/325-3/51.jpg" alt="Global Macro Research">
+                    <div class="card-body">
+                        <h3>Global Macroeconomic Research</h3>
+                        <p>Track international monetary policy, inflation, GDP and trade data, publish monthly macro outlook reports for investors and financial institutions.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img class="card-img" src="https://cowierhametd475-blip.github.io/325-3/52.jpg" alt="Securities Data Consulting">
+                    <div class="card-body">
+                        <h3>Securities & Exchange Data Consultancy</h3>
+                        <p>Real-time securities quotation analysis, stock fundamental research, technical trend sorting and customized screening tools service.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img class="card-img" src="https://cowierhametd475-blip.github.io/325-3/53.jpg" alt="Enterprise Financial Advisory">
+                    <div class="card-body">
+                        <h3>Corporate Financial Advisory</h3>
+                        <p>Enterprise capital operation planning, merger & acquisition financial evaluation, financing scheme design and internal financial optimization consulting.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img class="card-img" src="https://cowierhametd475-blip.github.io/325-3/54.jpg" alt="Private Wealth Management">
+                    <div class="card-body">
+                        <h3>Private Wealth Management Consulting</h3>
+                        <p>High-net-worth client exclusive asset allocation, cross-border asset layout, tax optimization and long-term wealth preservation planning.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img class="card-img" src="https://cowierhametd475-blip.github.io/325-3/55.jpg" alt="Industry Financial Report">
+                    <div class="card-body">
+                        <h3>Industry Vertical Financial Reports</h3>
+                        <p>In-depth financial analysis reports for energy, technology, real estate, consumer and new finance industries, updated quarterly.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img class="card-img" src="https://cowierhametd475-blip.github.io/325-3/56.jpg" alt="Real-time Data Subscription">
+                    <div class="card-body">
+                        <h3>Real-Time Financial Data Subscription</h3>
+                        <p>API & dashboard data access service, synchronous global market real-time quotes, historical data query and automated analysis interface.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us Sub Page -->
+        <section id="about" class="page-section">
+            <div class="section-title">
+                <h2>About UP QIB</h2>
+                <p>UK-based professional financial information consulting firm focusing on global cross-border financial data and investment advisory</p>
+            </div>
+            <div class="about-row">
+                <div class="about-img-block">
+                    <img src="https://cowierhametd475-blip.github.io/325-3/57.jpg" alt="UP QIB Manchester Office">
+                </div>
+                <div class="about-text">
+                    <h3>Our Company Profile</h3>
+                    <p>UP QIB is a registered financial information consultancy enterprise located in Manchester, England. We were founded to break information barriers for global investors and provide transparent, objective and data-backed financial consulting services.</p>
+                    <p>Our core team consists of senior financial analysts, data scientists and cross-border investment experts with decades of experience in international capital markets. We serve retail investors, asset management firms, listed companies and financial service agencies across Europe, Asia and North America.</p>
+                    <h3 style="margin-top: 2rem;">Our Core Values</h3>
+                    <ul class="value-list">
+                        <li>Data Objectivity: All analysis conclusions based on verified real market data</li>
+                        <li>Client Priority: Customized consulting solutions for every client’s financial goals</li>
+                        <li>Global Vision: Cover multi-region financial markets without regional bias</li>
+                        <li>Risk Prudence: Emphasize risk disclosure in all investment advice outputs</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="about-row" style="grid-template-columns: 1fr 1fr; margin-top:4rem;">
+                <div class="about-text">
+                    <h3>Our Development Vision</h3>
+                    <p>We aim to build a world-class integrated financial information service platform, unify global multi-market data resources, lower the threshold of professional financial analysis, and become the most trusted consulting partner for global capital participants.</p>
+                    <p>We continuously upgrade our data technology system, expand analyst team scale, and launch diversified data subscription and one-on-one consulting packages to meet the growing demand of complex global financial transactions.</p>
+                </div>
+                <div class="about-img-block">
+                    <img src="https://cowierhametd475-blip.github.io/325-3/58.jpg" alt="UP QIB Analyst Team">
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Us Sub Page -->
+        <section id="contact" class="page-section">
+            <div class="section-title">
+                <h2>Contact Us</h2>
+                <p>Fill in the online form or reach us directly via our UK office address & phone number</p>
+            </div>
+            <div class="contact-wrap">
+                <div class="contact-info-block">
+                    <h3>Company Contact Information</h3>
+                    <div class="contact-item">
+                        <h4>Office Address</h4>
+                        <p>70 Piccadilly, Manchester, England</p>
+                    </div>
+                    <div class="contact-item">
+                        <h4>Phone Number</h4>
+                        <p>+44 7761835227</p>
+                    </div>
+                    <div class="contact-item">
+                        <h4>Working Hours</h4>
+                        <p>Monday - Friday: 09:00 - 18:00 (UK Local Time)</p>
+                    </div>
+                    <div class="contact-item">
+                        <h4>Business Scope Support</h4>
+                        <p>Global financial data consulting, investment strategy planning, corporate financial advisory, real-time data subscription service support</p>
+                    </div>
+                    <img style="margin-top:2rem; border-radius:10px;" src="https://cowierhametd475-blip.github.io/325-3/59.jpg" alt="Manchester Office Location">
+                </div>
+                <div class="contact-form-block">
+                    <h3 style="margin-bottom:1.5rem; color:var(--nav-dark);">Send Us An Inquiry</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" required placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" required placeholder="Enter your contact email">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Contact Phone</label>
+                            <input type="tel" id="phone" placeholder="Your phone number (optional)">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Your Inquiry Content</label>
+                            <textarea id="message" rows="5" required placeholder="Describe your consulting requirements, questions or cooperation intention"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width:100%;">Submit Inquiry</button>
+                        <div class="submit-msg" id="successMsg">Your message has been submitted successfully! Our consultant will contact you within 24 working hours.</div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <h3>UP QIB Financial Information Consultancy</h3>
+            <p>70 Piccadilly, Manchester, England | Tel: +44 7761835227</p>
+            <p style="margin-top:1rem;">© 2026 UP QIB. All Rights Reserved. Professional Global Financial Intelligence Provider</p>
+        </div>
+    </footer>
+
+    <script>
+        // 1. Page Switch Navigation Logic
+        const navLinks = document.querySelectorAll('.page-nav-link');
+        const pageSections = document.querySelectorAll('.page-section');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        // Switch page section & active nav state
+        function switchPage(targetId) {
+            // Hide all sections
+            pageSections.forEach(sec => sec.classList.remove('active'));
+            // Show target section
+            document.getElementById(targetId).classList.add('active');
+            // Reset nav active
+            navLinks.forEach(link => link.classList.remove('active'));
+            document.querySelector(`a[href="#${targetId}"]`).classList.add('active');
+            // Scroll to page top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Close mobile menu after click
+            mobileNav.classList.remove('open');
+        }
+
+        // Bind nav click event
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('href').replace('#', '');
+                switchPage(target);
+            })
+        })
+
+        // Mobile menu toggle
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileNav.classList.toggle('open');
+        })
+
+        // 2. Floating Ad Close Function
+        function closeAd(adId) {
+            document.getElementById(adId).classList.add('ad-hidden');
+        }
+
+        // 3. Draggable Floating Ads
+        function makeDraggable(element) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            element.onmousedown = dragStart;
+            function dragStart(e) {
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = dragEnd;
+                document.onmousemove = dragMove;
+            }
+            function dragMove(e) {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                element.style.top = (element.offsetTop - pos2) + "px";
+                element.style.left = (element.offsetLeft - pos1) + "px";
+                element.style.right = "auto";
+                element.style.transform = "none";
+            }
+            function dragEnd() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+        makeDraggable(document.getElementById('adLeft'));
+        makeDraggable(document.getElementById('adRight'));
+
+        // 4. Contact Form Submit Always Success
+        const contactForm = document.getElementById('contactForm');
+        const successMsg = document.getElementById('successMsg');
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            successMsg.classList.add('show');
+            contactForm.reset();
+            // Hide success tip after 5s
+            setTimeout(()=>{
+                successMsg.classList.remove('show');
+            },5000)
+        })
+    </script>
+</body>
+</html>
